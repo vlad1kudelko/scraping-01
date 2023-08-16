@@ -9,7 +9,7 @@ def parse_page(inp_url):
 
     driver.get(inp_url)
     driver.reconnect(timeout=8)
-    driver.implicitly_wait(3)
+    driver.implicitly_wait(5)
     time.sleep(1)
 
     driver.find_element(By.CSS_SELECTOR, '[data-qa=restaurant-header-rating-action]').click()
@@ -18,7 +18,18 @@ def parse_page(inp_url):
     ret['count'] = re.findall(r'\d+', ret['count'].split('\n')[1])[0]
     ret['list'] = []
 
+    gameover= {'old_count': 0, 'count_iter': 0}
     while len(ret['list']) != ret['count']:
+        # gameover
+        if gameover['old_count'] == len(ret['list']):
+            gameover['count_iter'] += 1
+            print('strike', gameover)
+        else:
+            gameover['count_iter'] = 0
+        if gameover['count_iter'] == 5:
+            break
+        gameover['old_count'] = len(ret['list'])
+        # gameover
         driver.execute_script('document.querySelector("[data-qa=modal-scroll-content]").scrollTo(0, 99999999)')
         list_cards = driver.find_elements(By.CSS_SELECTOR, '[data-qa=review-card-component-element]')
         for item_cards in list_cards:
