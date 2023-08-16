@@ -1,25 +1,48 @@
 from selenium.webdriver.common.by import By
+import re
 import time
 import undetected_chromedriver as webdriver
 
+#--------------------------------------------------------------------
+def parse_page(inp_url):
+    ret = {}
+
+    driver.get(inp_url)
+    driver.reconnect(timeout=8)
+    driver.implicitly_wait(3)
+    time.sleep(1)
+
+    driver.find_element(By.CSS_SELECTOR, '[data-qa=restaurant-header-rating-action]').click()
+    ret['rating'] = driver.find_element(By.CSS_SELECTOR, '[data-qa=restaurant-info-modal-reviews] div[data-qa=heading]').text
+    ret['count'] = driver.find_element(By.CSS_SELECTOR, '[data-qa=restaurant-info-modal-reviews-rating-element] ~ * > *:nth-child(1)').text
+    ret['count'] = re.findall(r'\d+', ret['count'].split('\n')[1])[0]
+    ret['list'] = []
+
+    while len(ret['list']) != ret['count']:
+        driver.execute_script('document.querySelector("[data-qa=modal-scroll-content]").scrollTo(0, 99999999)')
+        list_cards = driver.find_elements(By.CSS_SELECTOR, '[data-qa=review-card-component-element]')
+        for item_cards in list_cards:
+            current_id = item_cards.find_element(By.CSS_SELECTOR, '[id^=label]').get_attribute('id').split('-')[1]
+            if current_id not in [ i['id'] for i in ret['list'] ]:
+                ret['list'].append({
+                    'id': current_id,
+                    'name': item_cards.find_element(By.CSS_SELECTOR, '[id^=label] > *:nth-child(1) > *:nth-child(1)').text,
+                    'date': item_cards.find_element(By.CSS_SELECTOR, '[id^=label] > *:nth-child(1) > *:nth-child(2)').text,
+                })
+                print('len:', len(ret['list']) )
+        time.sleep(1)
+
+    return ret
 #--------------------------------------------------------------------
 def main():
     #  url = 'https://intoli.com/blog/not-possible-to-block-chrome-headless/chrome-headless-test.html'
     url = 'https://www.lieferando.at/speisekarte/vapiano-wien-herrengasse'
     #  url = 'https://nowsecure.nl/'
 
-    driver = webdriver.Chrome()
-
-    driver.get(url)
-    driver.reconnect(timeout=6)
-
-    time.sleep(3)
-    driver.find_element(By.CSS_SELECTOR, '*[data-qa="restaurant-header-rating-action"]').click()
-    driver.find_element(By.CSS_SELECTOR, '*[data-qa=restaurant-info-modal-reviews] div[data-qa=heading]').text
-
-    time.sleep(9999)
+    print(parse_page(url))
 #--------------------------------------------------------------------
 if __name__ == '__main__':
+    driver = webdriver.Chrome()
     main()
 
 #  try:
