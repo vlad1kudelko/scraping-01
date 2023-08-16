@@ -8,9 +8,8 @@ def parse_page(inp_url):
     ret = {}
 
     driver.get(inp_url)
-    driver.reconnect(timeout=8)
+    driver.reconnect(timeout=10)
     driver.implicitly_wait(5)
-    time.sleep(1)
 
     driver.find_element(By.CSS_SELECTOR, '[data-qa=restaurant-header-rating-action]').click()
     ret['rating'] = driver.find_element(By.CSS_SELECTOR, '[data-qa=restaurant-info-modal-reviews] div[data-qa=heading]').text
