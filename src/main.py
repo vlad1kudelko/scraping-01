@@ -114,10 +114,10 @@ def main():
         if item_url['group'] == 'en':
             ret = parse_page_en(item_url['url'])
         with open(name_dir / name_file, 'a') as f:
-            json.dump({
+            f.write(json.dumps({
                 'input': item_url,
                 'output': ret,
-            }, f, ensure_ascii=False)
+            }, ensure_ascii=False) + '\n')
             print('WRITE')
 #--------------------------------------------------------------------
 if __name__ == '__main__':

@@ -1,0 +1,8 @@
+version: '3'
+
+services:
+    parse:
+        build: .
+        volumes:
+            - './out:/home/user/out'
+        command: 'python -u main.py'
