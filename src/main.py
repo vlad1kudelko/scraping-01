@@ -89,21 +89,19 @@ def parse_page_en(inp_url):
     return ret
 #--------------------------------------------------------------------
 def main():
-    #  url = 'https://intoli.com/blog/not-possible-to-block-chrome-headless/chrome-headless-test.html'
-    url = 'https://www.lieferando.at/speisekarte/vapiano-wien-herrengasse'
-    #  url = 'https://nowsecure.nl/'
-
     list_url = [
-        #  {'url': 'https://www.lieferando.at/speisekarte/vapiano-wien-herrengasse',           'group': 'de'},
-        #  {'url': 'https://www.lieferando.de/speisekarte/peter-pane-hamburg-goldbekplatz',    'group': 'de'},
-        #  {'url': 'https://www.thuisbezorgd.nl/de/speisekarte/vapiano-rembrandtplein',        'group': 'de'},
-        #  {'url': 'https://www.pyszne.pl/menu/vapiano-galeria-mokotow',                       'group': 'de'},
-        #  {'url': 'https://www.just-eat.ch/en/menu/vapiano-zuerich-raemistrasse',             'group': 'de'},
+        {'url': 'https://www.lieferando.at/speisekarte/vapiano-wien-herrengasse',           'group': 'de'},
+        {'url': 'https://www.lieferando.de/speisekarte/peter-pane-hamburg-goldbekplatz',    'group': 'de'},
+        {'url': 'https://www.thuisbezorgd.nl/de/speisekarte/vapiano-rembrandtplein',        'group': 'de'},
+        {'url': 'https://www.pyszne.pl/menu/vapiano-galeria-mokotow',                       'group': 'de'},
+        {'url': 'https://www.just-eat.ch/en/menu/vapiano-zuerich-raemistrasse',             'group': 'de'},
 
-        #  {'url': 'https://www.just-eat.co.uk/restaurants-vapiano-manchester',                'group': 'en'},
+        {'url': 'https://www.just-eat.co.uk/restaurants-vapiano-manchester',                'group': 'en'},
         {'url': 'https://www.just-eat.es/restaurants-vapiano-barcelona',                    'group': 'en'},
-        #  {'url': 'https://www.menulog.com.au/restaurants-vapiano-king-st-sydney',            'group': 'en'},
+        {'url': 'https://www.menulog.com.au/restaurants-vapiano-king-st-sydney',            'group': 'en'},
     ]
+
+    name_dir = datetime.datetime.now().isoformat()[:19]
 
     for item_url in list_url:
         if item_url['group'] == 'de':
@@ -115,11 +113,5 @@ def main():
 if __name__ == '__main__':
     driver = webdriver.Chrome()
     main()
-
-#  try:
-    #  pass
-#  except Exception as ex:
-    #  print(ex)
-#  finally:
-    #  driver.close()
-    #  driver.quit()
+    driver.close()
+    driver.quit()
