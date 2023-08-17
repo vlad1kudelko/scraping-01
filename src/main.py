@@ -1,4 +1,7 @@
 from selenium.webdriver.common.by import By
+import datetime
+import json
+import pathlib
 import re
 import time
 import undetected_chromedriver as webdriver
@@ -101,14 +104,21 @@ def main():
         {'url': 'https://www.menulog.com.au/restaurants-vapiano-king-st-sydney',            'group': 'en'},
     ]
 
-    name_dir = datetime.datetime.now().isoformat()[:19]
+    name_dir = pathlib.Path.cwd() / 'out'
+    name_file = datetime.datetime.now().isoformat()[:19] + '.jsonl'
+    pathlib.Path(name_dir).mkdir(parents=True, exist_ok=True)
 
     for item_url in list_url:
         if item_url['group'] == 'de':
             ret = parse_page_de(item_url['url'])
         if item_url['group'] == 'en':
             ret = parse_page_en(item_url['url'])
-        print( ret )
+        with open(name_dir / name_file, 'a') as f:
+            json.dump({
+                'input': item_url,
+                'output': ret,
+            }, f, ensure_ascii=False)
+            print('WRITE')
 #--------------------------------------------------------------------
 if __name__ == '__main__':
     driver = webdriver.Chrome()
