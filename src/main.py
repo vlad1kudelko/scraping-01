@@ -19,6 +19,7 @@ def parse_page_de(inp_url):
     ret['count'] = driver.find_element(By.CSS_SELECTOR, '[data-qa=restaurant-info-modal-reviews-rating-element] ~ * > *:nth-child(1)').text
     ret['count'] = re.findall(r'\d+', ret['count'].split('\n')[1])[0]
     ret['list'] = []
+    print(ret)
 
     gameover= {'old_count': 0, 'count_iter': 0}
     while len(ret['list']) != ret['count']:
@@ -61,6 +62,7 @@ def parse_page_en(inp_url):
     ret['rating'] = driver.find_element(By.CSS_SELECTOR, '.c-reviews-rating [data-test-id=rating-multi-star-component] ~ *').text
     ret['rating'] = re.findall(r'[\d,.]+', ret['rating'])[0]
     ret['list'] = []
+    print(ret)
 
     gameover= {'old_count': 0, 'count_iter': 0}
     while len(ret['list']) != ret['count']:
@@ -121,7 +123,12 @@ def main():
             print('WRITE')
 #--------------------------------------------------------------------
 if __name__ == '__main__':
-    driver = webdriver.Chrome()
+    options = webdriver.ChromeOptions()
+    # docker
+    options.add_argument('--headless')
+    options.add_argument('--disable-dev-shm-usage')
+    # docker
+    driver = webdriver.Chrome(options=options)
     main()
     driver.close()
     driver.quit()
