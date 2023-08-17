@@ -47,9 +47,10 @@ def parse_page_de(inp_url):
 def parse_page_en(inp_url):
     ret = {}
 
+    wait = 5
     driver.get(inp_url)
     driver.reconnect(timeout=10)
-    driver.implicitly_wait(5)
+    driver.implicitly_wait(wait)
 
     ret['count'] = driver.find_element(By.CSS_SELECTOR, '[data-js-test=rating-count-description]').text
     ret['count'] = re.findall(r'\d+', ret['count'])[0]
@@ -71,14 +72,17 @@ def parse_page_en(inp_url):
         gameover['old_count'] = len(ret['list'])
         # gameover
         driver.execute_script('document.querySelector(".c-megaModal-document--scrollable").scrollTo(0, 99999999)')
+        (lambda x: x[0].click() if len(x) == 1 else '')(driver.find_elements(By.CSS_SELECTOR, '[data-test-id=review-show-more-button]'))
         list_cards = driver.find_elements(By.CSS_SELECTOR, '[data-test-id=review-container]')
         for item_cards in list_cards[len(ret['list']):]:
+            driver.implicitly_wait(0.1)
             ret['list'].append({
                 'id': '',
                 'name': item_cards.find_element(By.CSS_SELECTOR, '[data-test-id=review-author]').text,
                 'date': item_cards.find_element(By.CSS_SELECTOR, '[data-test-id=review-date]').text,
-                'text': (lambda x: x.text if len(x) == 1 else '')(item_cards.find_elements(By.CSS_SELECTOR, '[data-test-id=review-text]')),
+                'text': (lambda x: x[0].text if len(x) == 1 else '')(item_cards.find_elements(By.CSS_SELECTOR, '[data-test-id=review-text]')),
             })
+            driver.implicitly_wait(wait)
             print('len:', len(ret['list']) )
         time.sleep(1)
 
@@ -96,9 +100,9 @@ def main():
         #  {'url': 'https://www.pyszne.pl/menu/vapiano-galeria-mokotow',                       'group': 'de'},
         #  {'url': 'https://www.just-eat.ch/en/menu/vapiano-zuerich-raemistrasse',             'group': 'de'},
 
-        {'url': 'https://www.just-eat.co.uk/restaurants-vapiano-manchester',                'group': 'en'},
+        #  {'url': 'https://www.just-eat.co.uk/restaurants-vapiano-manchester',                'group': 'en'},
         {'url': 'https://www.just-eat.es/restaurants-vapiano-barcelona',                    'group': 'en'},
-        {'url': 'https://www.menulog.com.au/restaurants-vapiano-king-st-sydney',            'group': 'en'},
+        #  {'url': 'https://www.menulog.com.au/restaurants-vapiano-king-st-sydney',            'group': 'en'},
     ]
 
     for item_url in list_url:
