@@ -70,17 +70,16 @@ def parse_page_en(inp_url):
             break
         gameover['old_count'] = len(ret['list'])
         # gameover
-        driver.execute_script('document.querySelector("[data-qa=modal-scroll-content]").scrollTo(0, 99999999)')
-        list_cards = driver.find_elements(By.CSS_SELECTOR, '[data-qa=review-card-component-element]')
-        for item_cards in list_cards:
-            current_id = item_cards.find_element(By.CSS_SELECTOR, '[id^=label]').get_attribute('id').split('-')[1]
-            if current_id not in [ i['id'] for i in ret['list'] ]:
-                ret['list'].append({
-                    'id': current_id,
-                    'name': item_cards.find_element(By.CSS_SELECTOR, '[id^=label] > *:nth-child(1) > *:nth-child(1)').text,
-                    'date': item_cards.find_element(By.CSS_SELECTOR, '[id^=label] > *:nth-child(1) > *:nth-child(2)').text,
-                })
-                print('len:', len(ret['list']) )
+        driver.execute_script('document.querySelector(".c-megaModal-document--scrollable").scrollTo(0, 99999999)')
+        list_cards = driver.find_elements(By.CSS_SELECTOR, '[data-test-id=review-container]')
+        for item_cards in list_cards[len(ret['list']):]:
+            ret['list'].append({
+                'id': '',
+                'name': item_cards.find_element(By.CSS_SELECTOR, '[data-test-id=review-author]').text,
+                'date': item_cards.find_element(By.CSS_SELECTOR, '[data-test-id=review-date]').text,
+                'text': (lambda x: x.text if len(x) == 1 else '')(item_cards.find_elements(By.CSS_SELECTOR, '[data-test-id=review-text]')),
+            })
+            print('len:', len(ret['list']) )
         time.sleep(1)
 
     return ret
