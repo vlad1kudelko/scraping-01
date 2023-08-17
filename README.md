@@ -9,6 +9,16 @@
 - Project execution time is 2 days;
 - From each page is parsed: the total rating, the number of comments. The author's name, the date of the comment and the text of the comment are parsed from each comment.
 
+## 🚀 Run
+
+To run it is enough to run one command.
+
+```sh
+docker-compose up --build
+```
+
+The links used for parsing are located in the file `main.py`.
+
 ## 🚀 Screenshots
 
 <img src="specification/Screenshot_2023-08-17_16-08-09.png" alt="screenshot 1" />
