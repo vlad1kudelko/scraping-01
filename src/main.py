@@ -51,10 +51,11 @@ def parse_page_en(inp_url):
     driver.reconnect(timeout=10)
     driver.implicitly_wait(5)
 
-    driver.find_element(By.CSS_SELECTOR, '[data-qa=restaurant-header-rating-action]').click()
-    ret['rating'] = driver.find_element(By.CSS_SELECTOR, '[data-qa=restaurant-info-modal-reviews] div[data-qa=heading]').text
-    ret['count'] = driver.find_element(By.CSS_SELECTOR, '[data-qa=restaurant-info-modal-reviews-rating-element] ~ * > *:nth-child(1)').text
-    ret['count'] = re.findall(r'\d+', ret['count'].split('\n')[1])[0]
+    ret['count'] = driver.find_element(By.CSS_SELECTOR, '[data-js-test=rating-count-description]').text
+    ret['count'] = re.findall(r'\d+', ret['count'])[0]
+    driver.find_element(By.CSS_SELECTOR, '[data-js-test=rating-count-description]').click()
+    ret['rating'] = driver.find_element(By.CSS_SELECTOR, '.c-reviews-rating [data-test-id=rating-multi-star-component] ~ *').text
+    ret['rating'] = re.findall(r'[\d,.]+', ret['rating'])[0]
     ret['list'] = []
 
     gameover= {'old_count': 0, 'count_iter': 0}
@@ -90,11 +91,11 @@ def main():
     #  url = 'https://nowsecure.nl/'
 
     list_url = [
-        {'url': 'https://www.lieferando.at/speisekarte/vapiano-wien-herrengasse',           'group': 'de'},
-        {'url': 'https://www.lieferando.de/speisekarte/peter-pane-hamburg-goldbekplatz',    'group': 'de'},
-        {'url': 'https://www.thuisbezorgd.nl/de/speisekarte/vapiano-rembrandtplein',        'group': 'de'},
-        {'url': 'https://www.pyszne.pl/menu/vapiano-galeria-mokotow',                       'group': 'de'},
-        {'url': 'https://www.just-eat.ch/en/menu/vapiano-zuerich-raemistrasse',             'group': 'de'},
+        #  {'url': 'https://www.lieferando.at/speisekarte/vapiano-wien-herrengasse',           'group': 'de'},
+        #  {'url': 'https://www.lieferando.de/speisekarte/peter-pane-hamburg-goldbekplatz',    'group': 'de'},
+        #  {'url': 'https://www.thuisbezorgd.nl/de/speisekarte/vapiano-rembrandtplein',        'group': 'de'},
+        #  {'url': 'https://www.pyszne.pl/menu/vapiano-galeria-mokotow',                       'group': 'de'},
+        #  {'url': 'https://www.just-eat.ch/en/menu/vapiano-zuerich-raemistrasse',             'group': 'de'},
 
         {'url': 'https://www.just-eat.co.uk/restaurants-vapiano-manchester',                'group': 'en'},
         {'url': 'https://www.just-eat.es/restaurants-vapiano-barcelona',                    'group': 'en'},
@@ -104,6 +105,9 @@ def main():
     for item_url in list_url:
         if item_url['group'] == 'de':
             ret = parse_page_de(item_url['url'])
+        if item_url['group'] == 'en':
+            ret = parse_page_en(item_url['url'])
+        print( ret )
 #--------------------------------------------------------------------
 if __name__ == '__main__':
     driver = webdriver.Chrome()
