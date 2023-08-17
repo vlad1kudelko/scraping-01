@@ -19,7 +19,7 @@ def parse_page_de(inp_url):
     ret['count'] = driver.find_element(By.CSS_SELECTOR, '[data-qa=restaurant-info-modal-reviews-rating-element] ~ * > *:nth-child(1)').text
     ret['count'] = re.findall(r'\d+', ret['count'].split('\n')[1])[0]
     ret['list'] = []
-    print(ret)
+    print('beg', ret)
 
     gameover= {'old_count': 0, 'count_iter': 0}
     while len(ret['list']) != ret['count']:
@@ -43,7 +43,7 @@ def parse_page_de(inp_url):
                     'name': item_cards.find_element(By.CSS_SELECTOR, '[id^=label] > *:nth-child(1) > *:nth-child(1)').text,
                     'date': item_cards.find_element(By.CSS_SELECTOR, '[id^=label] > *:nth-child(1) > *:nth-child(2)').text,
                 })
-                print('len:', len(ret['list']) )
+                print('len', len(ret['list']) )
         time.sleep(1)
 
     return ret
@@ -62,7 +62,7 @@ def parse_page_en(inp_url):
     ret['rating'] = driver.find_element(By.CSS_SELECTOR, '.c-reviews-rating [data-test-id=rating-multi-star-component] ~ *').text
     ret['rating'] = re.findall(r'[\d,.]+', ret['rating'])[0]
     ret['list'] = []
-    print(ret)
+    print('beg', ret)
 
     gameover= {'old_count': 0, 'count_iter': 0}
     while len(ret['list']) != ret['count']:
@@ -88,7 +88,7 @@ def parse_page_en(inp_url):
                 'text': (lambda x: x[0].text if len(x) == 1 else '')(item_cards.find_elements(By.CSS_SELECTOR, '[data-test-id=review-text]')),
             })
             driver.implicitly_wait(wait)
-            print('len:', len(ret['list']) )
+            print('len', len(ret['list']) )
         time.sleep(1)
 
     return ret
@@ -107,7 +107,7 @@ def main():
     ]
 
     name_dir = pathlib.Path.cwd() / 'out'
-    name_file = datetime.datetime.now().isoformat()[:19] + '.jsonl'
+    name_file = datetime.datetime.utcnow().isoformat()[:19] + '.jsonl'
     pathlib.Path(name_dir).mkdir(parents=True, exist_ok=True)
 
     for item_url in list_url:
