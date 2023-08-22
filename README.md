@@ -1,5 +1,7 @@
 <h1 align="center"> Crawler of cooking sites </h1>
 
+The customer needed to write a crawler to collect ratings and reviews from two types of cooking pages.
+
 ## 🚀 Highlights on this project
 
 - Cloudflare bypass protection has been implemented;
