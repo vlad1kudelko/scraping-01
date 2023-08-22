@@ -7,7 +7,8 @@
 - The project is dockerized;
 - Two types of site layout are crawled;
 - Project execution time is 2 days;
-- From each page is parsed: the total rating, the number of comments. The author's name, the date of the comment and the text of the comment are parsed from each comment.
+- From each page is parsed: the total rating, the number of comments. The author's name, the date of the comment and the text of the comment are parsed from each comment;
+- The result is collected in jsonl format (modified json format for line-by-line writing).
 
 ## 🚀 Run
 
